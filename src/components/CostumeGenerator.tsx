@@ -11,8 +11,8 @@ const CostumeGenerator = () => {
   const [name, setName] = useState("");
 
   const defaultNames = [
+    "seductive",
     "spooky",
-    "aroused",
     "Eerie",
     "Allured",
     "Haunting",
@@ -20,26 +20,23 @@ const CostumeGenerator = () => {
   ] as const;
 
   const buildRandName = (name: string) => {
-    return `${
-      defaultNames[Math.floor(Math.random() * defaultNames.length)]
-    } ${name}`;
+    const randName = defaultNames[Math.floor(Math.random() * defaultNames.length)];
+    return `${name} ${randName}`;
   };
 
   useEffect(() => {
     const run = async () => {
-      const name = await nameService.getName();
-      console.log("name is", name);
-      console.log("setting name to", buildRandName(name));
-      setName(buildRandName(name));
+      const nameServiceResult = await nameService.getName();
+      const haloweenName = buildRandName(nameServiceResult);
+      setName(haloweenName);
     };
     run();
   }, []);
 
   const onGenerate = async () => {
     setImage(null);
-    const name = await nameService.getName();
-    const haloweenName = buildRandName(name);
-    console.log("setting name to", haloweenName);
+    const nameServiceResult = await nameService.getName();
+    const haloweenName = buildRandName(nameServiceResult);
     setName(haloweenName);
     setLoading(true);
     const image = await imageService.getImage(haloweenName);
